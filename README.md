@@ -82,7 +82,7 @@ As senhas são armazenadas utilizando password_hash(), garantindo maior seguran�
 O cadastro inicial do administrador é realizado pelo terminal, não ficando disponível como formulário público.
 
 ## Estrutura
-
+```
 DE-TRAIN/
 │
 ├── assets/
@@ -139,6 +139,7 @@ DE-TRAIN/
 ├── LICENSE                    # Licença do projeto
 ├── README.md                  # Documentação principal
 └── Manual.md                  # Manual do sistema para usuários
+```
 
 ## Telas
 
