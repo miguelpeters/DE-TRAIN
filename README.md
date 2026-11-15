@@ -22,8 +22,16 @@ A proposta do nosso sistema é criar um site que permita visualizar informaçõe
 - Kanban
 - Scrum
 
+## Requisitos para a execução:
+- XAMPP instalado
+- PHP compatível com a versão utilizada no projeto
+- MariaDB
+- phpMyAdmin
+- Navegador atualizado
+- Servidor Apache habilitado
+
 ## Regras de Negócio:
-- É necessário fazer login com uma conta de funcionário para executar as funcionalidades do sistema.
+- Para utilizar as funcionalidades do sistema, é necessário fazer login com uma conta de funcionário ou gerente.
 - É necessário estar logado como gerente para cadastrar uma nova conta de funcionário.
 - É necessário fazer login como gerente ou funcionário para acessar a visualização das linhas, sensores e trens.
 - Apenas gerentes têm acesso à visualização de usuários
@@ -46,7 +54,7 @@ A proposta do nosso sistema é criar um site que permita visualizar informaçõe
 ## Requisitos Não-Funcionais:
 - O tempo de resposta do site deve ser mínimo
 - O sistema deverá apresentar mensagens de confirmação para ações de exclusão ou edição
-- As informações dos usuários devem ser protegidas com criptografia
+- As informações sensíveis dos usuários devem ser armazenadas e protegidas utilizando mecanismos adequados de segurança.
 - O site deve possuir alta escalabilidade
 - As funções e ferramentas do site devem ser intuitivas
 
@@ -54,11 +62,19 @@ A proposta do nosso sistema é criar um site que permita visualizar informaçõe
 
 O sistema possui autenticação e controle de permissões de acordo com o tipo de usuário.
 
-- Administrador: pode cadastrar, editar e excluir usuários, definir perfis e redefinir senhas.
+- Gerente: pode cadastrar, editar e excluir usuários, definir perfis e redefinir senhas.
 - Funcionário: pode acessar o painel e as áreas operacionais, mas não pode administrar contas.
 As senhas são armazenadas utilizando password_hash(), garantindo maior segurança. As operações de alteração de usuários utilizam requisições POST e tokens CSRF para ajudar a proteger o sistema.
 
 O cadastro inicial do administrador é realizado pelo terminal, não ficando disponível como formulário público.
+
+## Estrutura
+
+
+## Telas
+
+
+
 
 ## Objetivo Acadêmico
 Projeto desenvolvido para fins acadêmicos na disciplina de Programação de Aplicativos, 
@@ -66,6 +82,4 @@ com o objetivo de colocar em prática conhecimentos de desenvolvimento web,
 programação em PHP, banco de dados e segurança da informação.
 
 ## Status do projeto
-Em desenvolvimento.
-
-O projeto está em processo de desenvolvimento e poderá receber novas funcionalidades, melhorias e correções.
+Concluido.
