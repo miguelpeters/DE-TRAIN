@@ -31,32 +31,45 @@ A proposta do nosso sistema é criar um site que permita visualizar informaçõe
 - Servidor Apache habilitado
 
 ## Regras de Negócio:
-- Para utilizar as funcionalidades do sistema, é necessário fazer login com uma conta de funcionário ou gerente.
-- É necessário estar logado como gerente para cadastrar uma nova conta de funcionário.
-- É necessário fazer login como gerente ou funcionário para acessar a visualização das linhas, sensores e trens.
-- Apenas gerentes têm acesso à visualização de usuários
-- É necessário fazer login como funcionário ou gerente para cadastrar um novo sensor, trem ou rota
-- Alertas deverão aparecer caso algum campo seja preenchido incorretamente ou caso algum erro apareça
+- Para acessar as funcionalidades do sistema, é necessário realizar login com uma conta de funcionário ou gerente.
+- Apenas gerentes podem cadastrar novas contas de funcionários.
+- Gerentes e funcionários possuem acesso às funcionalidades operacionais do sistema.
+- Apenas gerentes possuem permissão para acessar a visualização e o gerenciamento de usuários.
+- O sistema deve validar os dados informados durante os cadastros e alterações, impedindo o envio de informações inválidas.
+- O sistema deve apresentar mensagens de alerta para informar erros, campos preenchidos incorretamente e operações realizadas com sucesso.
+- O usuário poderá permanecer conectado entre diferentes acessos caso não realize o logout.
+- O acesso às páginas e funcionalidades restritas deve respeitar as permissões correspondentes ao tipo de usuário autenticado.
 
 ## Requisitos Funcionais:
-- O sistema deve permitir fazer login caso tenha uma conta
-- O sistema deve permitir cadastrar um novo funcionário caso esteja usando uma conta de gerente
-- O sistema deve permitir visualizar a localização e rota dos trens em tempo real
-- O sistema deve permitir visualizar os relatórios enviados a partir dos sensores IOTs
-- O sistema deve permitir visualizar, editar e excluir os sensores já registrados
-- O sistema deve permitir cadastrar sensores
-- O sistema deve manter o usuário conectado no próximo acesso caso não tenha deslogado- 
-- O sistema deve permitir visualizar, editar e excluir os trens já registrados
-- O sistema deve permitir cadastrar estações
-- O sistema deve permitir cadastrar trens
-- O sistema deve permitir visualizar, editar e excluir as rotas já registradas
+- O sistema deve permitir que funcionários e gerentes realizem login utilizando suas credenciais cadastradas.
+- O sistema deve permitir que o usuário encerre sua sessão por meio da funcionalidade de logout.
+- O sistema deve permitir que gerentes cadastrem novos funcionários.
+- O sistema deve permitir que gerentes visualizem, editem e excluam contas de usuários.
+- O sistema deve permitir visualizar as informações dos trens cadastrados.
+- O sistema deve permitir cadastrar novos trens, informando seus dados e associando-os aos funcionários responsáveis.
+- O sistema deve permitir editar e excluir os trens já registrados.
+- O sistema deve permitir visualizar as rotas cadastradas.
+- O sistema deve permitir cadastrar novas rotas e associá-las aos trens correspondentes.
+- O sistema deve permitir editar e excluir as rotas já registradas.
+- O sistema deve permitir visualizar os sensores cadastrados.
+- O sistema deve permitir cadastrar novos sensores e registrar suas informações.
+- O sistema deve permitir editar e excluir os sensores já registrados.
+- O sistema deve permitir validar os campos dos formulários antes de realizar operações de cadastro ou alteração.
+- O sistema deve apresentar mensagens de confirmação ou alerta após operações realizadas, como cadastros, edições e exclusões.
+- O sistema deve permitir retornar às páginas iniciais correspondentes ao perfil do usuário autenticado.
 
 ## Requisitos Não-Funcionais:
-- O tempo de resposta do site deve ser mínimo
-- O sistema deverá apresentar mensagens de confirmação para ações de exclusão ou edição
-- As informações sensíveis dos usuários devem ser armazenadas e protegidas utilizando mecanismos adequados de segurança.
-- O site deve possuir alta escalabilidade
-- As funções e ferramentas do site devem ser intuitivas
+- O sistema deve apresentar um tempo de resposta adequado durante a navegação e execução de suas funcionalidades.
+- A interface deve possuir uma organização intuitiva, facilitando a utilização por funcionários e gerentes.
+- O sistema deve apresentar compatibilidade com navegadores modernos.
+- O layout deve se adaptar a diferentes resoluções de tela, proporcionando uma experiência de utilização adequada.
+- As informações sensíveis dos usuários devem ser protegidas por mecanismos adequados de segurança.
+- As senhas devem ser armazenadas utilizando métodos seguros de hash, evitando o armazenamento em texto puro.
+- O sistema deve utilizar mecanismos de controle de acesso para impedir que usuários não autorizados acessem funcionalidades restritas.
+- As operações que envolvem alterações nos dados devem possuir validações para evitar inconsistências no banco de dados.
+- O código deve possuir uma organização que facilite futuras manutenções e correções.
+- O banco de dados deve manter a integridade e a consistência das informações armazenadas.
+- O sistema deve apresentar mensagens claras e compreensíveis para orientar os usuários durante sua utilização.
 
 ## Segurança e controle de acesso
 
@@ -70,6 +83,62 @@ O cadastro inicial do administrador é realizado pelo terminal, não ficando dis
 
 ## Estrutura
 
+DE-TRAIN/
+│
+├── assets/
+│   ├── imgs/                  # Imagens e ícones utilizados no sistema
+│   └── style/
+│       └── style.css          # Estilização das páginas
+│
+├── database/
+│   └── ferrorama.sql          # Arquivo do banco de dados
+│
+├── DOC/                       # Documentações e pesquisas do projeto
+│   ├── Documentação-DeTrain.md
+│   ├── Pesquisa-API.md
+│   ├── Pesquisa-CRUD.md
+│   ├── Pesquisa-PDO.md
+│   ├── Pesquisa-SCRUM.md
+│   ├── Pesquisa-Visual.md
+│   ├── Pesquisa-XAMPP.md
+│   └── Relatorio-uso-ia.md
+│
+├── infra/
+│   ├── conexao.php            # Conexão com o banco de dados
+│   └── lembrar_login.php      # Funcionalidade de manter login
+│
+├── public/
+│   ├── cadastro_funcionario.php
+│   ├── cadastro_rota.php
+│   ├── cadastro_sensor.php
+│   ├── cadastro_trem.php
+│   ├── cadastro_usuario.php
+│   ├── home_funcionario.php
+│   ├── home_gerente.php
+│   ├── landing_page.php
+│   ├── login.php
+│   ├── logout.php
+│   ├── nav.php
+│   ├── processa_funcionario.php
+│   ├── processa_rota.php
+│   ├── processa_sensor.php
+│   ├── processa_trem.php
+│   ├── recuperarSenha.php
+│   ├── visualizar_rota.php
+│   ├── visualizar_sensor.php
+│   ├── visualizar_trem.php
+│   └── visualizar_usuario.php
+│
+├── scripts/
+│   ├── cadastro_funcionario.js
+│   ├── cadastro_usuario.js
+│   ├── login.js
+│   └── script.js
+│
+├── index.php                  # Página inicial
+├── LICENSE                    # Licença do projeto
+├── README.md                  # Documentação principal
+└── Manual.md                  # Manual do sistema para usuários
 
 ## Telas
 
