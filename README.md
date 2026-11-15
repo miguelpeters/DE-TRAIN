@@ -81,65 +81,12 @@ As senhas são armazenadas utilizando password_hash(), garantindo maior seguran�
 
 O cadastro inicial do administrador é realizado pelo terminal, não ficando disponível como formulário público.
 
-## Estrutura
-```
-DE-TRAIN/
-│
-├── assets/
-│   ├── imgs/                  # Imagens e ícones utilizados no sistema
-│   └── style/
-│       └── style.css          # Estilização das páginas
-│
-├── database/
-│   └── ferrorama.sql          # Arquivo do banco de dados
-│
-├── DOC/                       # Documentações e pesquisas do projeto
-│   ├── Documentação-DeTrain.md
-│   ├── Pesquisa-API.md
-│   ├── Pesquisa-CRUD.md
-│   ├── Pesquisa-PDO.md
-│   ├── Pesquisa-SCRUM.md
-│   ├── Pesquisa-Visual.md
-│   ├── Pesquisa-XAMPP.md
-│   └── Relatorio-uso-ia.md
-│
-├── infra/
-│   ├── conexao.php            # Conexão com o banco de dados
-│   └── lembrar_login.php      # Funcionalidade de manter login
-│
-├── public/
-│   ├── cadastro_funcionario.php
-│   ├── cadastro_rota.php
-│   ├── cadastro_sensor.php
-│   ├── cadastro_trem.php
-│   ├── cadastro_usuario.php
-│   ├── home_funcionario.php
-│   ├── home_gerente.php
-│   ├── landing_page.php
-│   ├── login.php
-│   ├── logout.php
-│   ├── nav.php
-│   ├── processa_funcionario.php
-│   ├── processa_rota.php
-│   ├── processa_sensor.php
-│   ├── processa_trem.php
-│   ├── recuperarSenha.php
-│   ├── visualizar_rota.php
-│   ├── visualizar_sensor.php
-│   ├── visualizar_trem.php
-│   └── visualizar_usuario.php
-│
-├── scripts/
-│   ├── cadastro_funcionario.js
-│   ├── cadastro_usuario.js
-│   ├── login.js
-│   └── script.js
-│
-├── index.php                  # Página inicial
-├── LICENSE                    # Licença do projeto
-├── README.md                  # Documentação principal
-└── Manual.md                  # Manual do sistema para usuários
-```
+## Estrutura do Projeto
+
+Abaixo está a organização dos arquivos e diretórios do DE-TRAIN.
+
+<img width="296" height="900" alt="image" src="https://github.com/user-attachments/assets/9ad22008-4861-479e-8011-13e7ccfbd35a" />
+<img width="296" height="653" alt="image" src="https://github.com/user-attachments/assets/ac55f58e-27d5-4a37-9416-2d9a74372647" />
 
 ## Telas
 
