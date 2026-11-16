@@ -108,6 +108,12 @@ Cadastro:
 Visualização:
 <img width="1600" height="784" alt="image" src="https://github.com/user-attachments/assets/e0aaf9e0-0c57-4fc2-b73d-b6bb9ff396bb" />
 
+## Manual do Usuário
+
+O manual apresenta orientações sobre a utilização das funcionalidades do DE-TRAIN.
+
+[Acessar Manual do Usuário (PDF)](Manual.pdf)
+
 ## Objetivo Acadêmico
 Projeto desenvolvido para fins acadêmicos na disciplina de Programação de Aplicativos, 
 com o objetivo de colocar em prática conhecimentos de desenvolvimento web, 
