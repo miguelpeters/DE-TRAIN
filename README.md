@@ -88,10 +88,31 @@ Abaixo está a organização dos arquivos e diretórios do DE-TRAIN.
 <img width="296" height="900" alt="image" src="https://github.com/user-attachments/assets/9ad22008-4861-479e-8011-13e7ccfbd35a" />
 <img width="296" height="653" alt="image" src="https://github.com/user-attachments/assets/ac55f58e-27d5-4a37-9416-2d9a74372647" />
 
-## Telas
+## Principais Telas
 
+Index:
+<img width="1600" height="786" alt="image" src="https://github.com/user-attachments/assets/b9b8f56c-46d8-4c11-ac2b-53e2e8b0e6fc" />
 
+Landing Page:
+<img width="1600" height="762" alt="image" src="https://github.com/user-attachments/assets/1df8a603-6c79-48f1-80d5-787ea3bfcd9c" />
 
+Login:
+<img width="1600" height="785" alt="image" src="https://github.com/user-attachments/assets/9c4ee675-c2b3-4420-8c92-70dbae8c103a" />
+
+Home:
+<img width="1600" height="789" alt="image" src="https://github.com/user-attachments/assets/e833b335-77f1-4188-8629-3e278637d2f6" />
+
+Cadastro:
+<img width="1600" height="782" alt="image" src="https://github.com/user-attachments/assets/99d3d36e-84b0-48f3-9cd5-16a00040f533" />
+
+Visualização:
+<img width="1600" height="784" alt="image" src="https://github.com/user-attachments/assets/e0aaf9e0-0c57-4fc2-b73d-b6bb9ff396bb" />
+
+## Manual do Usuário
+
+O manual apresenta orientações sobre a utilização das funcionalidades do DE-TRAIN.
+
+[Acessar Manual do Usuário (PDF)](Manual.pdf)
 
 ## Objetivo Acadêmico
 Projeto desenvolvido para fins acadêmicos na disciplina de Programação de Aplicativos, 
