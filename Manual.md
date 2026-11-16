@@ -43,25 +43,25 @@ Clique em **"Acessar Sistema"**, localizado no centro da tela inicial. Ao clicar
 
 Na página inicial do sistema, no menu localizado à esquerda, estarão disponíveis as opções de cadastro. Ao selecionar uma delas, uma janela será aberta na tela, permitindo realizar o cadastro do item desejado.
 
-<img src="assets/imgs/realizar-cadastros" width="600">
+<img src="assets/imgs/realizar-cadastros.png" width="600">
 
 ## 3. Para visualizar as tabelas
 
 Na página inicial, no menu à esquerda, estará disponível a seção **"Acessos rápidos"**, utilizada para acessar as tabelas e visualizar os registros dos itens cadastrados.
 
-<img src="assets/imgs/acessar-visualizações" width="600">
+<img src="assets/imgs/acessar-visualizações.png" width="600">
 
 ## 4. Para acessar a landing page
 
 Na página inicial, haverá um botão escrito **"Conheça o projeto!"**, localizado no canto inferior direito. Ao clicar nele, você será redirecionado para a landing page, onde poderá conhecer mais sobre o projeto.
 
-<img src="assets/imgs/acessar-landingpage" width="600">
+<img src="assets/imgs/acessar-landingpage.png" width="600">
 
 ## 5. Para realizar logout
 
 Para realizar o logout e sair da sua conta, clique em **"Sair"**, localizado no canto superior direito da página, ao lado das informações do usuário.
 
-<img src="assets/imgs/fazer-logout" width="600">
+<img src="assets/imgs/fazer-logout.png" width="600">
 
 ---
 
