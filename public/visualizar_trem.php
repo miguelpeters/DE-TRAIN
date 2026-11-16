@@ -4,10 +4,7 @@ session_start();
 
 include_once("../infra/conexao.php");
 
-
-
 $tipoUsuario = $_SESSION["tipo"] ?? "";
-
 
 $paginaHome = ($tipoUsuario === "gerente")
     ? "home_gerente.php"
@@ -18,10 +15,9 @@ if (!in_array($tipoUsuario, ["gerente", "funcionario"], true)) {
     exit();
 }
 
-
 $mensagemAlerta = "";
 
-
+// EXCLUIR TREM
 if (
     $_SERVER["REQUEST_METHOD"] === "POST" &&
     isset($_POST["excluir"])
@@ -68,64 +64,63 @@ if (
 
             }
 
-       } catch (mysqli_sql_exception $e) {
+        } catch (mysqli_sql_exception $e) {
 
-    if ($e->getCode() == 1451) {
+            if ($e->getCode() == 1451) {
 
+                $stmtRotas = $conexao->prepare(
+                    "SELECT id, nome
+                     FROM rotas
+                     WHERE trem_id = ?"
+                );
 
-        $stmtRotas = $conexao->prepare(
-            "SELECT id, nome
-             FROM rotas
-             WHERE trem_id = ?"
-        );
+                if (!$stmtRotas) {
+                    die("Erro ao consultar rotas: " . $conexao->error);
+                }
 
-        if (!$stmtRotas) {
-            die("Erro ao consultar rotas: " . $conexao->error);
+                $stmtRotas->bind_param("i", $id);
+                $stmtRotas->execute();
+
+                $resultadoRotas = $stmtRotas->get_result();
+
+                $rotasEncontradas = [];
+
+                while ($rota = $resultadoRotas->fetch_assoc()) {
+
+                    $rotasEncontradas[] =
+                        "ID " . $rota["id"] . " - " . $rota["nome"];
+
+                }
+
+                $stmtRotas->close();
+
+                if (!empty($rotasEncontradas)) {
+
+                    $mensagemAlerta =
+                        "Não foi possível excluir este trem!\n\n" .
+                        "Ele está vinculado às seguintes rotas:\n\n" .
+                        implode("\n", $rotasEncontradas);
+
+                } else {
+
+                    $mensagemAlerta =
+                        "Não foi possível excluir este trem, pois existem registros vinculados a ele.";
+
+                }
+
+            } else {
+
+                $mensagemAlerta = "Erro ao excluir o trem!";
+
+            }
+
         }
-
-        $stmtRotas->bind_param("i", $id);
-        $stmtRotas->execute();
-
-        $resultadoRotas = $stmtRotas->get_result();
-
-        $rotasEncontradas = [];
-
-        while ($rota = $resultadoRotas->fetch_assoc()) {
-
-            $rotasEncontradas[] =
-                "ID " . $rota["id"] . " - " . $rota["nome"];
-
-        }
-
-        $stmtRotas->close();
-
-        if (!empty($rotasEncontradas)) {
-
-            $mensagemAlerta =
-                "Não foi possível excluir este trem!\n\n" .
-                "Ele está vinculado às seguintes rotas:\n\n" .
-                implode("\n", $rotasEncontradas);
-
-        } else {
-
-            $mensagemAlerta =
-                "Não foi possível excluir este trem, pois existem registros vinculados a ele.";
-
-        }
-
-    } else {
-
-        $mensagemAlerta = "Erro ao excluir o trem!";
-
-    }
-
-}
 
         $stmt->close();
     }
 }
 
-
+// ATUALIZAR TREM
 if (
     $_SERVER["REQUEST_METHOD"] === "POST" &&
     isset($_POST["atualizar"])
@@ -142,7 +137,6 @@ if (
         "funcionario_id",
         FILTER_VALIDATE_INT
     );
-
 
     if (
         !$id ||
@@ -165,7 +159,6 @@ if (
 
     } else {
 
-
         $stmtFuncionario = $conexao->prepare(
             "SELECT id FROM funcionarios WHERE id = ?"
         );
@@ -184,7 +177,6 @@ if (
             $mensagemAlerta = "O funcionário selecionado não existe!";
 
         } else {
-
 
             $stmt = $conexao->prepare(
                 "UPDATE trens
@@ -229,7 +221,6 @@ if (
     }
 }
 
-
 if (isset($_GET["sucesso"])) {
 
     if ($_GET["sucesso"] === "excluir") {
@@ -243,7 +234,7 @@ if (isset($_GET["sucesso"])) {
     }
 }
 
-
+// BUSCAR TREM PARA EDITAR
 $tremEditar = null;
 
 if (isset($_GET["editar"])) {
@@ -279,7 +270,6 @@ if (isset($_GET["editar"])) {
     }
 }
 
-
 $sqlFuncionarios = "
     SELECT id, nome
     FROM funcionarios
@@ -297,7 +287,6 @@ $funcionarios = [];
 while ($funcionario = $resultadoFuncionarios->fetch_assoc()) {
     $funcionarios[] = $funcionario;
 }
-
 
 $sql = "
     SELECT
@@ -325,52 +314,36 @@ if (!$resultado) {
 <html lang="pt-br">
 
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../assets/style/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+  <title>Visualização de trens</title>
 
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="../assets/style/style.css">
-
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-    >
-
-    <title>Visualização de trens</title>
-
-    <link
-        rel="icon"
-        href="../assets/imgs/LogoDeTrain.png"
-        type="image/x-icon"
-    >
-
+  <link rel="icon" href="../assets/imgs/LogoDeTrain.png" type="image/x-icon">
 </head>
 
 <body class="body_home">
 
-    <?php if ($mensagemAlerta !== "") { ?>
+  <?php if ($mensagemAlerta !== "") { ?>
+    <script>
+        alert(<?php echo json_encode($mensagemAlerta); ?>);
 
-        <script>
-            alert(<?php echo json_encode($mensagemAlerta); ?>);
+        <?php if (isset($_GET["sucesso"])) { ?>
 
+        window.history.replaceState(
+            null,
+            "",
+            window.location.pathname
+        );
 
-            <?php if (isset($_GET["sucesso"])) { ?>
+        <?php } ?>
+    </script>
+  <?php } ?>
 
-                window.history.replaceState(
-                    null,
-                    "",
-                    window.location.pathname
-                );
+  <header class="cabecalho">
 
-            <?php } ?>
-        </script>
-
-    <?php } ?>
-
-    <header class="cabecalho">
-
-        <div class="lado-esquerdo">
+    <div class="lado-esquerdo">
 
     <a
         class="login-detrain-logo"
@@ -384,281 +357,231 @@ if (!$resultado) {
         alt="Logo DE-TRAIN"
     >
 
-</div>
+    </div>
 
-           
+  </header>
 
-    </header>
+  <main>
 
-    <main>
+    <?php if ($tremEditar !== null) { ?>
 
-        <!-- FORMULÁRIO DE EDIÇÃO -->
+    <div class="container_editar_usuario">
 
-        <?php if ($tremEditar !== null) { ?>
+    <div class="texto-editar-usuario">
+        <h2>EDITAR TREM</h2>
+        <p>Atualize as informações do trem selecionado.</p>
+    </div>
 
-            <div class="container_editar_usuario">
+    <form method="POST">
 
-                <div class="texto-editar-usuario">
+        <div class="form-editar-sensor">
 
-                    <h2>
-                        Editar trem
-                    </h2>
+            <input
+                type="hidden"
+                name="id"
+                value="<?php echo (int) $tremEditar["id"]; ?>"
+            >
 
-                </div>
+            <div class="campo-editar-sensor">
+                <label for="modelo" class="editar-sensor">Modelo</label>
 
-                <form method="POST">
-
-                    <div class="form-editar-sensor">
-
-                        <input
-                            type="hidden"
-                            name="id"
-                            value="<?php echo (int) $tremEditar["id"]; ?>"
-                        >
-
-                        <label for="modelo" class="editar-sensor">
-                            Modelo
-                        </label>
-
-                        <br>
-
-                        <input
-                            class="input-editar-sensor"
-                            type="text"
-                            id="modelo"
-                            name="modelo"
-                            value="<?php echo htmlspecialchars($tremEditar["modelo"]); ?>"
-                            maxlength="100"
-                            required
-                        >
-
-                        <br><br>
-
-                        <label for="serie" class="editar-sensor">
-                            Série
-                        </label>
-
-                        <br>
-
-                        <input
-                            class="input-editar-sensor"
-                            type="text"
-                            id="serie"
-                            name="serie"
-                            value="<?php echo htmlspecialchars($tremEditar["serie"]); ?>"
-                            maxlength="100"
-                            required
-                        >
-
-                        <br><br>
-
-                        <label for="estado" class="editar-sensor">
-                            Estado
-                        </label>
-
-                        <br>
-
-                        <select
-                            class="input-editar-sensor"
-                            id="estado"
-                            name="estado"
-                            required
-                        >
-
-                            <option
-                                value="operante"
-                                <?php echo $tremEditar["estado"] === "operante" ? "selected" : ""; ?>
-                            >
-                                Operante
-                            </option>
-
-                            <option
-                                value="inativo"
-                                <?php echo $tremEditar["estado"] === "inativo" ? "selected" : ""; ?>
-                            >
-                                Inativo
-                            </option>
-
-                        </select>
-
-                        <br><br>
-
-                        <label for="funcionario_id" class="editar-sensor">
-                            Funcionário responsável
-                        </label>
-
-                        <br>
-
-                        <select
-                            class="input-editar-sensor"
-                            id="funcionario_id"
-                            name="funcionario_id"
-                            required
-                        >
-
-                            <option value="">
-                                Selecione um funcionário
-                            </option>
-
-                            <?php foreach ($funcionarios as $funcionario) { ?>
-
-                                <option
-                                    value="<?php echo (int) $funcionario["id"]; ?>"
-                                    <?php
-                                    echo (
-                                        (int) $tremEditar["funcionario_id"]
-                                        === (int) $funcionario["id"]
-                                    ) ? "selected" : "";
-                                    ?>
-                                >
-
-                                    <?php echo htmlspecialchars($funcionario["nome"]); ?>
-
-                                </option>
-
-                            <?php } ?>
-
-                        </select>
-
-                        <br><br>
-
-                        <button
-                            class="button-atualizar"
-                            type="submit"
-                            name="atualizar"
-                        >
-                            ATUALIZAR
-                        </button>
-
-                        <a
-                            href="visualizar_trem.php"
-                            class="button-cancelar"
-                        >
-                            CANCELAR
-                        </a>
-
-                    </div>
-
-                </form>
-
+                <input
+                    class="input-editar-sensor"
+                    type="text"
+                    id="modelo"
+                    name="modelo"
+                    value="<?php echo htmlspecialchars($tremEditar["modelo"]); ?>"
+                    maxlength="100"
+                    required
+                >
             </div>
 
-            <hr>
+            <div class="campo-editar-sensor">
+                <label for="serie" class="editar-sensor">Série</label>
 
-        <?php } ?>
+                <input
+                    class="input-editar-sensor"
+                    type="text"
+                    id="serie"
+                    name="serie"
+                    value="<?php echo htmlspecialchars($tremEditar["serie"]); ?>"
+                    maxlength="100"
+                    required
+                >
+            </div>
 
-        <!-- TABELA DE TRENS -->
+            <div class="campo-editar-sensor">
+                <label for="estado" class="editar-sensor">Estado</label>
 
-        <div class="container_tabela_usuarios">
+                <select
+                    class="input-editar-sensor"
+                    id="estado"
+                    name="estado"
+                    required
+                >
 
-            <table class="tabela_usuarios table-bordered">
+                    <option
+                        value="operante"
+                        <?php echo $tremEditar["estado"] === "operante" ? "selected" : ""; ?>
+                    >
+                        Operante
+                    </option>
 
-                <thead>
+                    <option
+                        value="inativo"
+                        <?php echo $tremEditar["estado"] === "inativo" ? "selected" : ""; ?>
+                    >
+                        Inativo
+                    </option>
 
-                    <tr>
+                </select>
+            </div>
 
-                        <th scope="col">ID</th>
+            <div class="campo-editar-sensor">
+                <label for="funcionario_id" class="editar-sensor">Funcionário responsável</label>
 
-                        <th scope="col">Modelo</th>
+                <select
+                    class="input-editar-sensor"
+                    id="funcionario_id"
+                    name="funcionario_id"
+                    required
+                >
 
-                        <th scope="col">Série</th>
+                    <option value="">Selecione um funcionário</option>
 
-                        <th scope="col">Estado</th>
+                    <?php foreach ($funcionarios as $funcionario) { ?>
 
-                        <th scope="col">Funcionário responsável</th>
-
-                        <th scope="col">Ações</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    <?php while ($trem = $resultado->fetch_assoc()) { ?>
-
-                        <tr class="visualizar_usuario_gerente">
-
-                            <th scope="row">
-
-                                <?php echo (int) $trem["id"]; ?>
-
-                            </th>
-
-                            <td>
-
-                                <?php echo htmlspecialchars($trem["modelo"]); ?>
-
-                            </td>
-
-                            <td>
-
-                                <?php echo htmlspecialchars($trem["serie"]); ?>
-
-                            </td>
-
-                            <td>
-
-                                <?php echo htmlspecialchars($trem["estado"]); ?>
-
-                            </td>
-
-                            <td>
-
-                                <?php echo htmlspecialchars($trem["nome_funcionario"]); ?>
-
-                            </td>
-
-                            <td>
-
-                                <a href="visualizar_trem.php?editar=<?php echo (int) $trem["id"]; ?>"class="button-editar-tabela">
-                                    EDITAR
-                                </a>
-
-                                <form
-                                    method="POST"
-                                    style="display:inline;"
-                                >
-
-                                    <input
-                                        type="hidden"
-                                        name="id"
-                                        value="<?php echo (int) $trem["id"]; ?>"
-                                    >
-
-                                    <button
-                                        type="submit"
-                                        name="excluir"
-                                        onclick="return confirm('Tem certeza que deseja excluir este trem?');"
-                                    class="button-excluir-tabela">
-                                        EXCLUIR
-                                    </button>
-
-                                </form>
-
-                            </td>
-
-                        </tr>
+                        <option
+                            value="<?php echo (int) $funcionario["id"]; ?>"
+                            <?php
+                            echo (
+                                (int) $tremEditar["funcionario_id"]
+                                === (int) $funcionario["id"]
+                            ) ? "selected" : "";
+                            ?>
+                        >
+                            <?php echo htmlspecialchars($funcionario["nome"]); ?>
+                        </option>
 
                     <?php } ?>
 
-                </tbody>
+                </select>
+            </div>
 
-            </table>
+            <div class="botoes-editar">
+
+                <button
+                    class="button-atualizar"
+                    type="submit"
+                    name="atualizar"
+                >
+                    ATUALIZAR
+                </button>
+
+                <a href="visualizar_trem.php" class="button-cancelar">
+                    CANCELAR
+                </a>
+
+            </div>
 
         </div>
 
-    </main>
+    </form>
 
-    <?php
+</div>
 
-    $resultado->free();
-    $resultadoFuncionarios->free();
+<hr>
 
-    $conexao->close();
+<?php } ?>
 
-    ?>
+<div class="container_tabela_usuarios">
+
+    <table class="tabela_usuarios">
+
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Modelo</th>
+                <th scope="col">Série</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Funcionário responsável</th>
+                <th scope="col">Ações</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <?php while ($trem = $resultado->fetch_assoc()) { ?>
+
+                <tr class="visualizar_usuario_gerente">
+
+                    <th scope="row">
+                        <?php echo (int) $trem["id"]; ?>
+                    </th>
+
+                    <td>
+                        <?php echo htmlspecialchars($trem["modelo"]); ?>
+                    </td>
+
+                    <td>
+                        <?php echo htmlspecialchars($trem["serie"]); ?>
+                    </td>
+
+                    <td>
+                        <?php echo htmlspecialchars($trem["estado"]); ?>
+                    </td>
+
+                    <td>
+                        <?php echo htmlspecialchars($trem["nome_funcionario"]); ?>
+                    </td>
+
+                    <td>
+
+                        <a class="button-editar-tabela" href="visualizar_trem.php?editar=<?php echo (int) $trem["id"]; ?>">
+                            EDITAR
+                        </a>
+
+                        <form method="POST" style="display:inline;">
+
+                            <input
+                                type="hidden"
+                                name="id"
+                                value="<?php echo (int) $trem["id"]; ?>"
+                            >
+
+                            <button
+                                class="button-excluir-tabela"
+                                type="submit"
+                                name="excluir"
+                                onclick="return confirm('Tem certeza que deseja excluir este trem?');"
+                            >
+                                EXCLUIR
+                            </button>
+
+                        </form>
+
+                    </td>
+
+                </tr>
+
+            <?php } ?>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</main>
+
+<?php
+
+$resultado->free();
+$resultadoFuncionarios->free();
+
+$conexao->close();
+
+?>
 
 </body>
-
 </html>
