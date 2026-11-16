@@ -2,19 +2,16 @@
 
 session_start();
 
-
-
 $tipoUsuario = $_SESSION["tipo"] ?? "";
-
-$paginaHome = ($tipoUsuario === "gerente")
-    ? "home_gerente.php"
-    : "home_funcionario.php";
-
 
 if (!in_array($tipoUsuario, ["gerente", "funcionario"], true)) {
     header("Location: login.php");
     exit();
 }
+
+$paginaHome = ($tipoUsuario === "gerente")
+    ? "home_gerente.php"
+    : "home_funcionario.php";
 
 include_once("../infra/conexao.php");
 
@@ -23,6 +20,7 @@ $podeGerenciarRotas = true;
 $mensagem = "";
 $tipoMensagem = "";
 
+// EXCLUIR ROTA
 if (
     $_SERVER["REQUEST_METHOD"] === "POST" &&
     isset($_POST["excluir"])
@@ -68,7 +66,6 @@ if (
         } catch (mysqli_sql_exception $e) {
 
             if ($e->getCode() == 1451) {
-
 
                 $stmtSensores = $conexao->prepare(
                     "SELECT id, nome, tipo
@@ -129,7 +126,7 @@ if (
     }
 }
 
-
+// ATUALIZAR ROTA
 if (
     $_SERVER["REQUEST_METHOD"] === "POST" &&
     isset($_POST["atualizar"])
@@ -276,6 +273,7 @@ if (isset($_GET["sucesso"])) {
     }
 }
 
+// BUSCAR ROTA PARA EDITAR
 $rotaEditar = null;
 
 if (isset($_GET["editar"])) {
@@ -352,37 +350,24 @@ if (!$resultado) {
 <html lang="pt-br">
 
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../assets/style/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+  <title>Visualização de rotas</title>
 
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="../assets/style/style.css">
-
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-    >
-
-    <link
-        rel="icon"
-        href="../assets/imgs/LogoDeTrain.png"
-        type="image/x-icon"
-    >
-
-    <title>Visualização de rotas</title>
-
+  <link rel="icon" href="../assets/imgs/LogoDeTrain.png" type="image/x-icon">
 </head>
 
 <body class="body_home">
 
-<?php if ($mensagem !== "") { ?>
+  <?php if ($mensagem !== "") { ?>
     <script>
         alert(<?php echo json_encode($mensagem); ?>);
     </script>
-<?php } ?>
+  <?php } ?>
 
-<?php if ($mensagemSucesso !== "") { ?>
+  <?php if ($mensagemSucesso !== "") { ?>
     <script>
         alert(<?php echo json_encode($mensagemSucesso); ?>);
 
@@ -392,9 +377,9 @@ if (!$resultado) {
             window.location.pathname
         );
     </script>
-<?php } ?>
+  <?php } ?>
 
-<header class="cabecalho">
+  <header class="cabecalho">
 
     <div class="lado-esquerdo">
 
@@ -410,339 +395,243 @@ if (!$resultado) {
         alt="Logo DE-TRAIN"
     >
 
-</div>
+    </div>
 
+  </header>
 
-
-</header>
-
-<main>
-
-
-    <?php if ($mensagem !== "") { ?>
-
-    <p>
-        <?php echo htmlspecialchars($mensagem); ?>
-    </p>
-
-    <?php } ?>
-
+  <main>
 
     <?php if ($rotaEditar !== null) { ?>
 
-        <div class="container_editar_usuario">
+    <div class="container_editar_usuario">
 
-            <div class="texto-editar-usuario">
+    <div class="texto-editar-usuario">
+        <h2>EDITAR ROTA</h2>
+        <p>Atualize as informações da rota selecionada.</p>
+    </div>
 
-                <h2>Editar rota</h2>
+    <form method="POST">
+
+        <div class="form-editar-sensor">
+
+            <input
+                type="hidden"
+                name="id"
+                value="<?php echo (int) $rotaEditar["id"]; ?>"
+            >
+
+            <div class="campo-editar-sensor">
+                <label for="nome" class="editar-sensor">Nome da rota</label>
+
+                <input
+                    class="input-editar-sensor"
+                    type="text"
+                    id="nome"
+                    name="nome"
+                    value="<?php echo htmlspecialchars($rotaEditar["nome"]); ?>"
+                    maxlength="100"
+                    required
+                >
+            </div>
+
+            <div class="campo-editar-sensor">
+                <label for="descricao" class="editar-sensor">Descrição</label>
+
+                <textarea
+                    class="input-editar-sensor"
+                    id="descricao"
+                    name="descricao"
+                    rows="3"
+                ><?php echo htmlspecialchars($rotaEditar["descricao"] ?? ""); ?></textarea>
+            </div>
+
+            <div class="campo-editar-sensor">
+                <label for="distancia" class="editar-sensor">Distância</label>
+
+                <input
+                    class="input-editar-sensor"
+                    type="number"
+                    id="distancia"
+                    name="distancia"
+                    min="0"
+                    step="0.01"
+                    value="<?php echo htmlspecialchars($rotaEditar["distancia"]); ?>"
+                    required
+                >
+            </div>
+
+            <div class="campo-editar-sensor">
+                <label for="duracao" class="editar-sensor">Duração (horas)</label>
+
+                <input
+                    class="input-editar-sensor"
+                    type="number"
+                    id="duracao"
+                    name="duracao"
+                    min="0"
+                    step="0.01"
+                    value="<?php echo htmlspecialchars($rotaEditar["duracao"]); ?>"
+                    required
+                >
+            </div>
+
+            <div class="campo-editar-sensor">
+                <label for="data_criacao" class="editar-sensor">Data de criação</label>
+
+                <input
+                    class="input-editar-sensor"
+                    type="date"
+                    id="data_criacao"
+                    name="data_criacao"
+                    value="<?php echo htmlspecialchars($rotaEditar["data_criacao"]); ?>"
+                    required
+                >
+            </div>
+
+            <div class="campo-editar-sensor">
+                <label for="trem_id" class="editar-sensor">Trem associado</label>
+
+                <select
+                    class="input-editar-sensor"
+                    id="trem_id"
+                    name="trem_id"
+                    required
+                >
+
+                    <option value="">Selecione um trem</option>
+
+                    <?php foreach ($trens as $trem) { ?>
+
+                        <option
+                            value="<?php echo (int) $trem["id"]; ?>"
+                            <?php
+                            echo (
+                                (int) $rotaEditar["trem_id"]
+                                === (int) $trem["id"]
+                            ) ? "selected" : "";
+                            ?>
+                        >
+                            <?php echo htmlspecialchars($trem["modelo"]); ?>
+                        </option>
+
+                    <?php } ?>
+
+                </select>
+            </div>
+
+            <div class="botoes-editar">
+
+                <button
+                    class="button-atualizar"
+                    type="submit"
+                    name="atualizar"
+                >
+                    ATUALIZAR
+                </button>
+
+                <a href="visualizar_rota.php" class="button-cancelar">
+                    CANCELAR
+                </a>
 
             </div>
 
-            <form method="POST">
-
-                <div class="form-editar-sensor">
-
-                    <input
-                        type="hidden"
-                        name="id"
-                        value="<?php echo (int) $rotaEditar["id"]; ?>"
-                    >
-
-                    <label
-                        for="nome"
-                        class="editar-sensor"
-                    >
-                        Nome da rota
-                    </label>
-
-                    <br>
-
-                    <input
-                        class="input-editar-sensor"
-                        type="text"
-                        id="nome"
-                        name="nome"
-                        value="<?php echo htmlspecialchars($rotaEditar["nome"]); ?>"
-                        maxlength="100"
-                        required
-                    >
-
-                    <br><br>
-
-                    <label
-                        for="descricao"
-                        class="editar-sensor"
-                    >
-                        Descrição
-                    </label>
-
-                    <br>
-
-                    <textarea
-                        class="input-editar-sensor"
-                        id="descricao"
-                        name="descricao"
-                        rows="3"
-                    ><?php echo htmlspecialchars($rotaEditar["descricao"] ?? ""); ?></textarea>
-
-                    <br><br>
-
-                    <label
-                        for="distancia"
-                        class="editar-sensor"
-                    >
-                        Distância
-                    </label>
-
-                    <br>
-
-                    <input
-                        class="input-editar-sensor"
-                        type="number"
-                        id="distancia"
-                        name="distancia"
-                        min="0"
-                        step="0.01"
-                        value="<?php echo htmlspecialchars($rotaEditar["distancia"]); ?>"
-                        required
-                    >
-
-                    <br><br>
-
-                    <label
-                        for="duracao"
-                        class="editar-sensor"
-                    >
-                        Duração (horas)
-                    </label>
-
-                    <br>
-
-                    <input
-                        class="input-editar-sensor"
-                        type="number"
-                        id="duracao"
-                        name="duracao"
-                        min="0"
-                        step="0.01"
-                        value="<?php echo htmlspecialchars($rotaEditar["duracao"]); ?>"
-                        required
-                    >
-
-                    <br><br>
-
-                    <label
-                        for="data_criacao"
-                        class="editar-sensor"
-                    >
-                        Data de criação
-                    </label>
-
-                    <br>
-
-                    <input
-                        class="input-editar-sensor"
-                        type="date"
-                        id="data_criacao"
-                        name="data_criacao"
-                        value="<?php echo htmlspecialchars($rotaEditar["data_criacao"]); ?>"
-                        required
-                    >
-
-                    <br><br>
-
-                    <label
-                        for="trem_id"
-                        class="editar-sensor"
-                    >
-                        Trem associado
-                    </label>
-
-                    <br>
-
-                    <select
-                        class="input-editar-sensor"
-                        id="trem_id"
-                        name="trem_id"
-                        required
-                    >
-
-                        <option value="">
-                            Selecione um trem
-                        </option>
-
-                        <?php foreach ($trens as $trem) { ?>
-
-                            <option
-                                value="<?php echo (int) $trem["id"]; ?>"
-                                <?php
-                                echo (
-                                    (int) $rotaEditar["trem_id"]
-                                    === (int) $trem["id"]
-                                ) ? "selected" : "";
-                                ?>
-                            >
-
-                                <?php echo htmlspecialchars($trem["modelo"]); ?>
-
-                            </option>
-
-                        <?php } ?>
-
-                    </select>
-
-                    <br><br>
-
-                    <button
-                        class="button-atualizar"
-                        type="submit"
-                        name="atualizar"
-                    >
-                        ATUALIZAR
-                    </button>
-
-                    <a
-                        href="visualizar_rota.php"
-                        class="button-cancelar"
-                    >
-                        CANCELAR
-                    </a>
-
-                </div>
-
-            </form>
-
         </div>
 
-        <hr>
+    </form>
 
-    <?php } ?>
+</div>
 
-    <!-- TABELA DE ROTAS -->
+<hr>
 
-    <div class="container_tabela_usuarios">
+<?php } ?>
 
-        <table class="tabela_visualizacao">
+<div class="container_tabela_usuarios">
 
-            <thead>
+    <table class="tabela_usuarios">
 
-                <tr>
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nome da rota</th>
+                <th scope="col">Descrição</th>
+                <th scope="col">Distância</th>
+                <th scope="col">Duração (horas)</th>
+                <th scope="col">Data de criação</th>
+                <th scope="col">Trem associado</th>
+                <th scope="col">Ações</th>
+            </tr>
+        </thead>
 
-                    <th scope="col">ID</th>
+        <tbody>
 
-                    <th scope="col">Nome da rota</th>
+            <?php while ($rota = $resultado->fetch_assoc()) { ?>
 
-                    <th scope="col">Descrição</th>
+                <tr class="visualizar_usuario_gerente">
 
-                    <th scope="col">Distância</th>
+                    <th scope="row">
+                        <?php echo (int) $rota["id"]; ?>
+                    </th>
 
-                    <th scope="col">Duração (horas)</th>
+                    <td>
+                        <?php echo htmlspecialchars($rota["nome"]); ?>
+                    </td>
 
-                    <th scope="col">Data de criação</th>
+                    <td>
+                        <?php echo htmlspecialchars($rota["descricao"] ?? ""); ?>
+                    </td>
 
-                    <th scope="col">Trem associado</th>
+                    <td>
+                        <?php echo htmlspecialchars($rota["distancia"]); ?>
+                    </td>
 
-                    <th scope="col">Ações</th>
+                    <td>
+                        <?php echo htmlspecialchars($rota["duracao"]); ?>
+                    </td>
+
+                    <td>
+                        <?php echo date("d/m/Y", strtotime($rota["data_criacao"])); ?>
+                    </td>
+
+                    <td>
+                        <?php echo htmlspecialchars($rota["modelo_trem"]); ?>
+                    </td>
+
+                    <td>
+
+                        <a class="button-editar-tabela" href="visualizar_rota.php?editar=<?php echo (int) $rota["id"]; ?>">
+                            EDITAR
+                        </a>
+
+                        <form method="POST" style="display:inline;">
+
+                            <input
+                                type="hidden"
+                                name="id"
+                                value="<?php echo (int) $rota["id"]; ?>"
+                            >
+
+                            <button
+                                class="button-excluir-tabela"
+                                type="submit"
+                                name="excluir"
+                                onclick="return confirm('Tem certeza que deseja excluir esta rota?');"
+                            >
+                                EXCLUIR
+                            </button>
+
+                        </form>
+
+                    </td>
 
                 </tr>
 
-            </thead>
+            <?php } ?>
 
-            <tbody>
+        </tbody>
 
-                <?php while ($rota = $resultado->fetch_assoc()) { ?>
+    </table>
 
-                    <tr class="visualizar_usuario_gerente">
-
-                        <th scope="row">
-
-                            <?php echo (int) $rota["id"]; ?>
-
-                        </th>
-
-                        <td>
-
-                            <?php echo htmlspecialchars($rota["nome"]); ?>
-
-                        </td>
-
-                        <td>
-
-                            <?php echo htmlspecialchars($rota["descricao"] ?? ""); ?>
-
-                        </td>
-
-                        <td>
-
-                            <?php echo htmlspecialchars($rota["distancia"]); ?>
-
-                        </td>
-
-                        <td>
-
-                            <?php echo htmlspecialchars($rota["duracao"]); ?>
-
-                        </td>
-
-                        <td>
-
-                            <?php
-                            echo date(
-                                "d/m/Y",
-                                strtotime($rota["data_criacao"])
-                            );
-                            ?>
-
-                        </td>
-
-                        <td>
-
-                            <?php echo htmlspecialchars($rota["modelo_trem"]); ?>
-
-                        </td>
-
-                        <td>
-
-                            <a href="visualizar_rota.php?editar=<?php echo $rota['id']; ?>"class="button-editar-tabela">
-                                 EDITAR
-                            </a>
-
-                            <form
-                                method="POST"
-                                style="display:inline;"
-                            >
-
-                                <input
-                                    type="hidden"
-                                    name="id"
-                                    value="<?php echo (int) $rota["id"]; ?>"
-                                >
-
-                                <button
-                                    type="submit"
-                                    name="excluir"
-                                    onclick="return confirm('Tem certeza que deseja excluir esta rota?');"
-                                    class="button-excluir-tabela"
-                                >
-
-
-                                    EXCLUIR
-
-                                </button>
-
-                            </form>
-
-                        </td>
-
-                    </tr>
-
-                <?php } ?>
-
-            </tbody>
-
-        </table>
-
-    </div>
+</div>
 
 </main>
 

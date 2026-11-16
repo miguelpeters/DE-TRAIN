@@ -42,7 +42,7 @@ html, body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: rgb(253, 253, 234);
+    background-color: #073d30;
 }
 
 .DE-TRAIN {
@@ -1310,70 +1310,113 @@ button:hover {
    color: #a9d93e;
 }
 
+/* TABELAS DE VISUALIZAÇÃO E FORMULÁRIOS DE EDIÇÃO */
 
-/* ==========================================================
-   TABELAS E FORMULÁRIOS DE EDIÇÃO
-   (seção consolidada: as regras duplicadas foram unificadas)
-   ========================================================== */
 
-.container_tabela_usuarios {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin: 30px auto;
-}
-
-.tabela_usuarios {
-    margin: 0 auto;
-    text-align: center;
-}
+/* BASE DA PÁGINA */
 
 body {
     background-color: #0b3027;
     color: white;
 }
 
+/* CABEÇALHO DAS PÁGINAS DE TABELAS */
+
 .cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 82px;
+    padding: 0 30px;
+    box-sizing: border-box;
     background-color: #063d32;
     border-bottom: 1px solid #285e4e;
 }
 
-/* regras gerais de tabela */
+/* agrupa VOLTAR + logo */
+.cabecalho .lado-esquerdo {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* link VOLTAR */
+.cabecalho .login-detrain-logo {
+    font-size: 20px;
+    line-height: 1;
+    color: #ffffff;
+    transition: color 0.2s;
+}
+
+.cabecalho .login-detrain-logo:hover {
+    color: #56d6b0;
+}
+
+/* logo */
+.cabecalho #icon {
+    width: 52px;
+    height: 52px;
+    margin: 0;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+@media (max-width: 500px) {
+    .cabecalho {
+        min-height: 68px;
+        padding: 0 15px;
+    }
+
+    .cabecalho .lado-esquerdo {
+        gap: 14px;
+    }
+
+    .cabecalho .login-detrain-logo {
+        font-size: 17px;
+    }
+
+    .cabecalho #icon {
+        width: 42px;
+        height: 42px;
+    }
+}
+
+
+/* REGRAS GERAIS (valem para qualquer <table> do site) */
 
 table {
-    background-color: white;
-    color: #222;
+    background-color: #173b30;
+    color: #e6f1ec;
     border-collapse: collapse;
 }
 
 thead,
 th {
-    background-color: #e5e8e4;
-    color: #063d32;
+    background-color: #073d30;
+    color: #ffffff;
 }
 
 td {
-    background-color: white;
-    color: #222;
+    background-color: #173b30;
+    color: #e6f1ec;
 }
 
 table,
 th,
 td {
-    border-color: #cccccc;
+    border-color: #285747;
 }
 
 tbody tr:nth-child(even) td {
-    background-color: #f2f4f2;
+    background-color: #20483a;
 }
 
 tbody tr:hover td {
-    background-color: #e5eee9;
+    background-color: #285d49;
 }
 
 td a {
-    color: #007bff;
+    color: #65d9b2;
 }
 
 button,
@@ -1382,6 +1425,7 @@ input[type="button"] {
     cursor: pointer;
 }
 
+/* campos de formulário continuam claros para facilitar a leitura */
 input[type="text"],
 input[type="search"],
 select,
@@ -1395,52 +1439,132 @@ input::placeholder {
     color: #777;
 }
 
-/* tabela padrão (rotas, sensores, etc.) */
 
+/* TABELA DE VISUALIZAÇÃO */
 
+/* área que centraliza a tabela na página */
+.container_tabela_usuarios {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    overflow-x: auto;
+    padding: 20px;
+    margin: 30px auto;
+    box-sizing: border-box;
+}
 
-/* BOTÃO EDITAR */
-.tabela_usuarios a {
-    display: inline-block;
-    padding: 7px 12px;
-    margin: 2px;
-    background-color: #306653;
+/* tabela */
+.tabela_usuarios {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #173b30;
+    color: #e6f1ec;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.35);
+    font-size: 16px;
+    text-align: center;
+}
+
+/* cabeçalho */
+.tabela_usuarios thead th {
+    background-color: #073d30;
     color: #ffffff;
-    text-decoration: none;
-    font-size: 12px;
+    padding: 15px 18px;
+    font-size: 15px;
     font-weight: bold;
-    border-radius: 6px;
+    border: none;
+}
+
+/* células */
+.tabela_usuarios tbody td,
+.tabela_usuarios tbody th {
+    padding: 12px 18px;
+    border: none;
+    color: #e6f1ec;
+}
+
+/* linhas alternadas */
+.tabela_usuarios tbody tr:nth-child(odd) td,
+.tabela_usuarios tbody tr:nth-child(odd) th {
+    background-color: #173b30;
+}
+
+.tabela_usuarios tbody tr:nth-child(even) td,
+.tabela_usuarios tbody tr:nth-child(even) th {
+    background-color: #20483a;
+}
+
+/* linha ao passar o mouse */
+.tabela_usuarios tbody tr:hover td,
+.tabela_usuarios tbody tr:hover th {
+    background-color: #285d49 !important;
     transition: 0.2s;
 }
 
-.tabela_usuarios a:hover {
-    background-color: #176348;
-    color: #ffffff;
+/* coluna de ações */
+.tabela_usuarios td:last-child {
+    white-space: nowrap;
 }
 
-/* BOTÃO EXCLUIR */
-.tabela_usuarios button {
-    padding: 7px 12px;
+/* formulário do botão EXCLUIR */
+.tabela_usuarios td form {
+    display: inline;
+    margin: 0;
+}
+
+/* botão EDITAR */
+.tabela_usuarios .button-editar-tabela {
+    display: inline-block;
+    padding: 9px 15px;
+    margin: 2px;
+    background-color: #397c65;
+    color: #ffffff;
+    border-radius: 7px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.tabela_usuarios .button-editar-tabela:hover {
+    background-color: #56d6b0;
+    color: #073d30;
+}
+
+/* botão EXCLUIR (botão dentro da tabela) */
+.tabela_usuarios .button-excluir-tabela {
+    display: inline-block;
+    padding: 9px 15px;
     margin: 2px;
     background-color: #c0392b;
     color: #ffffff;
     border: none;
-    border-radius: 6px;
+    border-radius: 7px;
     font-size: 12px;
     font-weight: bold;
     cursor: pointer;
     transition: 0.2s;
 }
 
-.tabela_usuarios button:hover {
-    background-color: #c0392b;
-    color: #ffffff;
+.tabela_usuarios .button-excluir-tabela:hover {
+    background-color: #962d22;
 }
 
-/* RESPONSIVIDADE */
+/* responsividade da tabela de visualização */
 @media (max-width: 768px) {
     .container_tabela_usuarios {
         width: 95%;
+    }
+
+    .tabela_usuarios {
+        width: 100%;
+        min-width: 650px;
+        font-size: 13px;
     }
 
     .tabela_usuarios thead th,
@@ -1451,75 +1575,8 @@ input::placeholder {
     }
 }
 
-.container_tabelas {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    overflow-x: auto;
-}
 
-.tabela_padrao {
-    width: 80%;
-    margin: 0 auto;
-    font-size: 18px;
-    background-color: white;
-    color: #222;
-    border-collapse: collapse;
-    border-radius: 5px;
-}
-
-.tabela_padrao thead,
-.tabela_padrao th {
-    background-color: #e5e8e4;
-    color: #063d32;
-}
-
-.tabela_padrao td {
-    background-color: white;
-    color: #222;
-}
-
-.tabela_padrao,
-.tabela_padrao th,
-.tabela_padrao td {
-    border-color: #cccccc;
-}
-
-.tabela_padrao tbody tr:nth-child(even) td,
-.tabela_padrao tbody tr:nth-child(even) th {
-    background-color: #f1f3f1;
-}
-
-.tabela_padrao tbody tr:hover td,
-.tabela_padrao tbody tr:hover th {
-    background-color: #e5eee9;
-}
-
-.tabela_padrao td:last-child {
-    white-space: nowrap;
-}
-
-.tabela_padrao td form {
-    display: inline;
-    margin: 0;
-}
-
-.tabela_padrao td button {
-    display: inline-block;
-    vertical-align: middle;
-}
-
-.tabela_padrao button,
-.tabela_padrao input[type="submit"],
-.tabela_padrao input[type="button"] {
-    cursor: pointer;
-}
-
-.tabela_padrao td a {
-    color: #007bff;
-}
-
-/* tabela de visualização */
+/* TABELA ALTERNATIVA */
 
 .container_tabelas {
     display: flex;
@@ -1533,16 +1590,37 @@ input::placeholder {
     width: 80%;
     margin: 0 auto;
     font-size: 18px;
+    background-color: #173b30;
+    color: #e6f1ec;
+    border-collapse: collapse;
+    border-radius: 5px;
+}
+
+.tabela_padrao thead,
+.tabela_padrao th {
+    background-color: #073d30;
+    color: #ffffff;
+}
+
+.tabela_padrao td {
+    background-color: #173b30;
+    color: #e6f1ec;
+}
+
+.tabela_padrao,
+.tabela_padrao th,
+.tabela_padrao td {
+    border-color: #285747;
 }
 
 .tabela_padrao tbody tr:nth-child(even) td,
 .tabela_padrao tbody tr:nth-child(even) th {
-    background-color: #f1f3f1 !important;
+    background-color: #20483a !important;
 }
 
 .tabela_padrao tbody tr:hover td,
 .tabela_padrao tbody tr:hover th {
-    background-color: #e5eee9 !important;
+    background-color: #285d49 !important;
 }
 
 .tabela_padrao td:last-child {
@@ -1559,135 +1637,190 @@ input::placeholder {
     vertical-align: middle;
 }
 
-.button-excluir-tabela{
-color: #fc0303;
-button-decoration: none;
+.tabela_padrao td a {
+    color: #65d9b2;
+}
+
+
+/* BOTÕES DE AÇÃO FORA DA .tabela_usuarios */
+
+.button-excluir-tabela {
+    color: #ff6b6b;
+    text-decoration: none;
 }
 
 .button-editar-tabela {
-text-decoration: none;
-color:#00503f
+    color: #65d9b2;
+    text-decoration: none;
 }
 
-/* página de rotas: área principal */
 
-.pagina-rotas {
-    width: 100%;
-    flex: 1;
-    box-sizing: border-box;
-    padding: 30px 20px 40px;
-}
+/* FORMULÁRIO DE EDIÇÃO */
 
-.pagina-rotas hr {
-    border: 0;
-    border-top: 1px solid #285e4e;
-    opacity: 1;
-    margin: 30px 0;
-}
-
-/* formulário de edição (centralizado na página) */
-
+/* cartão centralizado na página */
 .container_editar_usuario {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    width: 100%;
-    margin: 0 auto;
+    align-items: stretch;
+    width: 92%;
+    max-width: 540px;
+    margin: 35px auto 10px;
+    padding: 30px 32px 32px;
+    box-sizing: border-box;
+    background-color: #173b30;
+    border: 1px solid #285747;
+    border-top: 4px solid #39c99a;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* título e subtítulo */
+.texto-editar-usuario {
+    margin: 0 0 24px;
+    text-align: center;
 }
 
 .texto-editar-usuario h2 {
-    margin: 0 0 20px;
-    font-size: 28px;
-    text-align: center;
+    margin: 0 0 8px;
+    color: #ffffff;
+    font-size: 26px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.texto-editar-usuario p {
+    margin: 0;
+    color: #a9c2b7;
+    font-size: 14px;
 }
 
 .container_editar_usuario form {
     width: 100%;
-    max-width: 400px;
+    max-width: none;
+    margin: 0;
 }
 
-.form-editar-rota {
+/* lista de campos */
+.form-editar-sensor {
     display: flex;
     flex-direction: column;
-    align-items: stretch;
     width: 100%;
-    margin: 0 auto;
-    box-sizing: border-box;
 }
 
-.editar-rota {
-    margin-bottom: 6px;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.input-editar-rota {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 8px;
+.campo-editar-sensor {
+    display: flex;
+    flex-direction: column;
     margin-bottom: 18px;
-    border-radius: 6px;
-    font-family: inherit;
-    font-size: 14px;
 }
 
-textarea.input-editar-rota {
+/* rótulos */
+.editar-sensor {
+    margin-bottom: 7px;
+    color: #b8d8ce;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+/* campos em tema escuro */
+.form-editar-sensor .input-editar-sensor {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 13px;
+    background-color: #102f26;
+    color: #ffffff;
+    border: 1px solid #39735e;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 15px;
+    outline: none;
+    color-scheme: dark;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-editar-sensor .input-editar-sensor:focus {
+    border-color: #56d6b0;
+    box-shadow: 0 0 0 3px rgba(86, 214, 176, 0.20);
+}
+
+.form-editar-sensor .input-editar-sensor::placeholder {
+    color: #8fb3a2;
+}
+
+.form-editar-sensor textarea.input-editar-sensor {
+    min-height: 90px;
     resize: vertical;
 }
 
-.acoes-editar-rota {
+/* botões ATUALIZAR e CANCELAR */
+.botoes-editar {
     display: flex;
+    justify-content: flex-end;
     align-items: center;
-    gap: 14px;
-    margin-top: 6px;
+    gap: 12px;
+    margin-top: 10px;
+    padding-top: 20px;
+    border-top: 1px solid #285747;
+}
+
+.button-atualizar,
+.button-cancelar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 26px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.2s;
 }
 
 .button-atualizar {
-    padding: 10px 22px;
     background-color: #c6f24e;
     color: #073d30;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
+    border: 1px solid #c6f24e;
 }
 
 .button-atualizar:hover {
     background-color: #a9d93e;
+    border-color: #a9d93e;
+    color: #073d30;
 }
 
 .button-cancelar {
-    color: #ff6b6b;
-    font-weight: bold;
-    text-decoration: none;
+    background-color: transparent;
+    color: #c7ddd2;
+    border: 1px solid #39735e;
 }
 
 .button-cancelar:hover {
-    text-decoration: underline;
+    background-color: #20483a;
+    color: #ffffff;
+    text-decoration: none;
 }
 
-.editar-sensor {
-margin-bottom: 6px;
-
+/* linha separando o formulário da tabela */
+.container_editar_usuario + hr {
+    width: 92%;
+    max-width: 1200px;
+    margin: 30px auto;
+    border: 0;
+    border-top: 1px solid #285e4e;
+    opacity: 1;
 }
 
-.container_editar_usuario {
-    margin-left: 90px;
-}
+@media (max-width: 500px) {
+    .container_editar_usuario {
+        padding: 22px 18px 24px;
+    }
 
-.texto-editar-usuario {
-    margin-right: 210px;
-    margin-top: 30px
-}
-
-.container_editar_usuario {
-    margin-left: 90px;
-}
-
-.input-editar-sensor {
-    border-radius: 5px
-}
-
-.button-atualizar {
+    .botoes-editar {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
 }
 
 /* Landing Page */

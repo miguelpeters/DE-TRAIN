@@ -33,7 +33,7 @@ function obterTabelaUsuario($tipo)
 }
 
 
-
+// EXCLUIR USUÁRIO
 if (
     $_SERVER["REQUEST_METHOD"] === "POST" &&
     isset($_POST["excluir"])
@@ -140,6 +140,7 @@ if (
 }
 
 
+// ATUALIZAR USUÁRIO
 if (
     $_SERVER["REQUEST_METHOD"] === "POST" &&
     isset($_POST["atualizar"])
@@ -176,7 +177,6 @@ if (
         $mensagem = "Confira o nome, o e-mail e o telefone informados.";
 
     } else {
-
 
         $stmtEmail = $conexao->prepare(
             "SELECT id FROM $tabela
@@ -232,7 +232,6 @@ if (
                 );
 
             } else {
-
 
                 $stmt = $conexao->prepare(
                     "UPDATE $tabela
@@ -295,6 +294,7 @@ if (isset($_GET["sucesso"])) {
 }
 
 
+// BUSCAR USUÁRIO PARA EDITAR
 $usuarioEditar = null;
 
 if (isset($_GET["editar"], $_GET["tipo"])) {
@@ -367,58 +367,42 @@ if (!$resultado) {
 
 ?>
 
+<!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../assets/style/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+  <title>Visualização de usuários</title>
 
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="../assets/style/style.css">
-
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-    >
-
-    <title>Visualização de usuários</title>
-
-    <link
-        rel="icon"
-        href="../assets/imgs/LogoDeTrain.png"
-        type="image/x-icon"
-    >
-
+  <link rel="icon" href="../assets/imgs/LogoDeTrain.png" type="image/x-icon">
 </head>
 
 <body class="body_home">
 
-    <?php if ($mensagem !== "") { ?>
+  <?php if ($mensagem !== "") { ?>
+    <script>
+        alert(<?php echo json_encode($mensagem); ?>);
+    </script>
+  <?php } ?>
 
-        <script>
-            alert(<?php echo json_encode($mensagem); ?>);
-        </script>
+  <?php if ($mensagemSucesso !== "") { ?>
+    <script>
+        alert(<?php echo json_encode($mensagemSucesso); ?>);
 
-    <?php } ?>
+        window.history.replaceState(
+            null,
+            "",
+            window.location.pathname
+        );
+    </script>
+  <?php } ?>
 
-    <?php if ($mensagemSucesso !== "") { ?>
+  <header class="cabecalho">
 
-        <script>
-            alert(<?php echo json_encode($mensagemSucesso); ?>);
-
-            window.history.replaceState(
-                null,
-                "",
-                window.location.pathname
-            );
-        </script>
-
-    <?php } ?>
-
-    <header class="cabecalho">
-
-       <div class="lado-esquerdo">
+    <div class="lado-esquerdo">
 
     <a
         class="login-detrain-logo"
@@ -432,253 +416,209 @@ if (!$resultado) {
         alt="Logo DE-TRAIN"
     >
 
-</div>
+    </div>
 
-    
+  </header>
 
-    </header>
+  <main>
 
-    <main>
+    <?php if ($usuarioEditar !== null) { ?>
 
-        <?php if ($usuarioEditar !== null) { ?>
+    <div class="container_editar_usuario">
 
-            <div class="container_editar_usuario">
+    <div class="texto-editar-usuario">
+        <h2>EDITAR <?php echo htmlspecialchars(mb_strtoupper($usuarioEditar["tipo"], "UTF-8")); ?></h2>
+        <p>Atualize as informações do usuário selecionado.</p>
+    </div>
 
-                <div class="texto-editar-usuario">
+    <form method="POST">
 
-                    <h2>
-                        Editar <?php echo htmlspecialchars($usuarioEditar["tipo"]); ?>
-                    </h2>
+        <div class="form-editar-sensor">
 
-                </div>
+            <input
+                type="hidden"
+                name="id"
+                value="<?php echo (int) $usuarioEditar["id"]; ?>"
+            >
 
-                <form method="POST">
+            <input
+                type="hidden"
+                name="tipo"
+                value="<?php echo htmlspecialchars($usuarioEditar["tipo"]); ?>"
+            >
 
-                    <div class="form-editar-usuario">
+            <div class="campo-editar-sensor">
+                <label for="nome" class="editar-sensor">Nome</label>
 
-                        <input
-                            type="hidden"
-                            name="id"
-                            value="<?php echo (int) $usuarioEditar["id"]; ?>"
-                        >
+                <input
+                    class="input-editar-sensor"
+                    type="text"
+                    id="nome"
+                    name="nome"
+                    maxlength="100"
+                    value="<?php echo htmlspecialchars($usuarioEditar["nome"]); ?>"
+                    required
+                >
+            </div>
 
-                        <input
-                            type="hidden"
-                            name="tipo"
-                            value="<?php echo htmlspecialchars($usuarioEditar["tipo"]); ?>"
-                        >
+            <div class="campo-editar-sensor">
+                <label for="email" class="editar-sensor">Email</label>
 
-                        <label for="nome" class="editar-usuario">
-                            Nome
-                        </label>
+                <input
+                    class="input-editar-sensor"
+                    type="email"
+                    id="email"
+                    name="email"
+                    maxlength="100"
+                    value="<?php echo htmlspecialchars($usuarioEditar["email"]); ?>"
+                    required
+                >
+            </div>
 
-                        <br>
+            <div class="campo-editar-sensor">
+                <label for="numero_telefone" class="editar-sensor">Telefone</label>
 
-                        <input
-                            class="input-editar-usuario"
-                            type="text"
-                            id="nome"
-                            name="nome"
-                            maxlength="100"
-                            value="<?php echo htmlspecialchars($usuarioEditar["nome"]); ?>"
-                            required
-                        >
+                <input
+                    class="input-editar-sensor"
+                    type="text"
+                    id="numero_telefone"
+                    name="numero_telefone"
+                    maxlength="15"
+                    value="<?php echo htmlspecialchars($usuarioEditar["numero_telefone"]); ?>"
+                    required
+                >
+            </div>
 
-                        <br><br>
+            <div class="campo-editar-sensor">
+                <label for="senha" class="editar-sensor">Nova senha</label>
 
-                        <label for="email" class="editar-usuario">
-                            Email
-                        </label>
+                <input
+                    class="input-editar-sensor"
+                    type="password"
+                    id="senha"
+                    name="senha"
+                    placeholder="Deixe em branco para manter a senha atual"
+                >
+            </div>
 
-                        <br>
+            <div class="botoes-editar">
 
-                        <input
-                            class="input-editar-usuario"
-                            type="email"
-                            id="email"
-                            name="email"
-                            maxlength="100"
-                            value="<?php echo htmlspecialchars($usuarioEditar["email"]); ?>"
-                            required
-                        >
+                <button
+                    class="button-atualizar"
+                    type="submit"
+                    name="atualizar"
+                >
+                    ATUALIZAR
+                </button>
 
-                        <br><br>
-
-                        <label for="numero_telefone" class="editar-usuario">
-                            Telefone
-                        </label>
-
-                        <br>
-
-                        <input
-                            class="input-editar-usuario"
-                            type="text"
-                            id="numero_telefone"
-                            name="numero_telefone"
-                            maxlength="15"
-                            value="<?php echo htmlspecialchars($usuarioEditar["numero_telefone"]); ?>"
-                            required
-                        >
-
-                        <br><br>
-
-                        <label for="senha" class="editar-usuario">
-                            Nova senha
-                        </label>
-
-                        <br>
-
-                        <input
-                            class="input-editar-usuario"
-                            type="password"
-                            id="senha"
-                            name="senha"
-                            placeholder="Deixe em branco para manter a senha atual"
-                        >
-
-                        <br><br>
-
-                        <button
-                            class="button-atualizar"
-                            type="submit"
-                            name="atualizar"
-                        >
-                            ATUALIZAR
-                        </button>
-
-                        <a
-                            
-                        href="visualizar_usuario.php"
-                            class="button-cancelar"
-                        >
-                            CANCELAR
-                        </a>
-
-                    </div>
-
-                </form>
+                <a href="visualizar_usuario.php" class="button-cancelar">
+                    CANCELAR
+                </a>
 
             </div>
 
-            <hr>
-
-        <?php } ?>
-
-        <div class="container_tabela_usuarios">
-
-            <table class="tabela_usuarios table-bordered">
-
-                <thead>
-
-                    <tr>
-
-                        <th scope="col">#</th>
-
-                        <th scope="col">Nome</th>
-
-                        <th scope="col">Email</th>
-
-                        <th scope="col">Telefone</th>
-
-                        <th scope="col">Tipo</th>
-
-                        <th scope="col">Ações</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    <?php while ($pessoa = $resultado->fetch_assoc()) { ?>
-
-                        <tr class="visualizar_usuario_gerente">
-
-                            <th scope="row">
-
-                                <?php echo (int) $pessoa["id"]; ?>
-
-                            </th>
-
-                            <td>
-
-                                <?php echo htmlspecialchars($pessoa["nome"]); ?>
-
-                            </td>
-
-                            <td>
-
-                                <?php echo htmlspecialchars($pessoa["email"]); ?>
-
-                            </td>
-
-                            <td>
-
-                                <?php echo htmlspecialchars($pessoa["numero_telefone"]); ?>
-
-                            </td>
-
-                            <td>
-
-                                <?php echo htmlspecialchars($pessoa["tipo"]); ?>
-
-                            </td>
-
-                            <td>
-
-                                <a
-                                    href="visualizar_usuario.php?editar=<?php echo (int) $pessoa["id"]; ?>&tipo=<?php echo urlencode($pessoa["tipo"]); ?>"
-                                
-                            class="button-editar-tabela"    >
-                                    EDITAR
-                                </a>
-
-                                <form
-                                    method="POST"
-                                    style="display:inline;"
-                                    onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');"
-                                >
-
-                                    <input
-                                        type="hidden"
-                                        name="id"
-                                        value="<?php echo (int) $pessoa["id"]; ?>"
-                                    >
-
-                                    <input
-                                        type="hidden"
-                                        name="tipo"
-                                        value="<?php echo htmlspecialchars($pessoa["tipo"]); ?>"
-                                    >
-
-                                    <button
-                                        type="submit"
-                                        name="excluir"
-                                        class="button-excluir-tabela"
-                                    >
-                                        EXCLUIR
-                                    </button>
-
-                                </form>
-
-                            </td>
-
-                        </tr>
-
-                    <?php } ?>
-
-                </tbody>
-
-            </table>
-
         </div>
 
-    </main>
+    </form>
 
-    <?php
-    $conexao->close();
-    ?>
+</div>
+
+<hr>
+
+<?php } ?>
+
+<div class="container_tabela_usuarios">
+
+    <table class="tabela_usuarios">
+
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Email</th>
+                <th scope="col">Telefone</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Ações</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <?php while ($pessoa = $resultado->fetch_assoc()) { ?>
+
+                <tr class="visualizar_usuario_gerente">
+
+                    <th scope="row">
+                        <?php echo (int) $pessoa["id"]; ?>
+                    </th>
+
+                    <td>
+                        <?php echo htmlspecialchars($pessoa["nome"]); ?>
+                    </td>
+
+                    <td>
+                        <?php echo htmlspecialchars($pessoa["email"]); ?>
+                    </td>
+
+                    <td>
+                        <?php echo htmlspecialchars($pessoa["numero_telefone"]); ?>
+                    </td>
+
+                    <td>
+                        <?php echo htmlspecialchars($pessoa["tipo"]); ?>
+                    </td>
+
+                    <td>
+
+                        <a class="button-editar-tabela" href="visualizar_usuario.php?editar=<?php echo (int) $pessoa["id"]; ?>&tipo=<?php echo urlencode($pessoa["tipo"]); ?>">
+                            EDITAR
+                        </a>
+
+                        <form
+                            method="POST"
+                            style="display:inline;"
+                            onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');"
+                        >
+
+                            <input
+                                type="hidden"
+                                name="id"
+                                value="<?php echo (int) $pessoa["id"]; ?>"
+                            >
+
+                            <input
+                                type="hidden"
+                                name="tipo"
+                                value="<?php echo htmlspecialchars($pessoa["tipo"]); ?>"
+                            >
+
+                            <button
+                                class="button-excluir-tabela"
+                                type="submit"
+                                name="excluir"
+                            >
+                                EXCLUIR
+                            </button>
+
+                        </form>
+
+                    </td>
+
+                </tr>
+
+            <?php } ?>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</main>
+
+<?php
+$conexao->close();
+?>
 
 </body>
-
 </html>
