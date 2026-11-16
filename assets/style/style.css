@@ -170,6 +170,10 @@ html, body {
    line-height: 1.5;
 }
 
+.hg-footer {
+     background-color: #073d30;
+}
+
 
 /* Cadastro */
 
@@ -1053,7 +1057,7 @@ button:hover {
     justify-content: space-between;
     align-items: center;
     gap: 15px;
-    padding: 50px 35px;
+    padding:15px;
     margin: 0;
     border-top: 1px solid #1b5b49;
     font-size: 16px;
