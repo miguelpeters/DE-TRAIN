@@ -112,7 +112,7 @@ Visualização:
 
 O manual apresenta orientações sobre a utilização das funcionalidades do DE-TRAIN.
 
-[Acessar Manual do Usuário (PDF)](Manual.pdf)
+[Acessar Manual do Usuário](Manual.md)
 
 ## Objetivo Acadêmico
 Projeto desenvolvido para fins acadêmicos na disciplina de Programação de Aplicativos, 
