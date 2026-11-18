@@ -7,15 +7,15 @@ include_once("../infra/lembrar_login.php");
 restaurarLogin($conexao);
 
 if (
-    !isset($_SESSION["gerente_id"]) ||
+    !isset($_SESSION["id"]) ||
     !isset($_SESSION["tipo"]) ||
-    $_SESSION["tipo"] !== "gerente"
+    $_SESSION["tipo"] !== "funcionario"
 ) {
     header("Location: login.php");
     exit();
 }
 
-$nomeGerente = htmlspecialchars($_SESSION["gerente_nome"] ?? "Gerente");
+$nomeFuncionario = htmlspecialchars($_SESSION["nome"] ?? "Funcionário");
 ?>
 
 <!DOCTYPE html>
@@ -25,7 +25,7 @@ $nomeGerente = htmlspecialchars($_SESSION["gerente_nome"] ?? "Gerente");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Painel do Gerente</title>
+    <title>Painel do Funcionário</title>
 
     <link rel="stylesheet" href="../assets/style/style.css">
     <link rel="icon" href="../assets/imgs/PageIcon.png" type="image/x-icon">
@@ -43,8 +43,8 @@ $nomeGerente = htmlspecialchars($_SESSION["gerente_nome"] ?? "Gerente");
 
         <div class="hg-profile">
             <div class="hg-profile-info">
-                <span>Bem-vindo(a),</span>
-                <strong><?= $nomeGerente ?></strong>
+                <span>Funcionário</span>
+                <strong><?= $nomeFuncionario ?></strong>
             </div>
 
             <a href="logout.php" class="hg-logout">Sair</a>
@@ -55,42 +55,39 @@ $nomeGerente = htmlspecialchars($_SESSION["gerente_nome"] ?? "Gerente");
 
     <main class="hg-main">
 
-
-
         <section class="hg-dashboard">
 
 
             <aside class="hg-sidebar">
 
-                
-    <div class="hg-cep-card">
+                <div class="hg-cep-card">
 
-    <h3>Consulta de CEP</h3>
+                    <h3>Consulta de CEP</h3>
 
-    <p>Digite um CEP para localizar um endereço.</p>
+                    <p>Digite um CEP para localizar um endereço.</p>
 
-    <form id="formCEP">
+                    <form id="formCEP">
 
-        <input
-            type="text"
-            id="cep"
-            placeholder="00000-000"
-            maxlength="9"
-            inputmode="numeric"
-            required
-        >
+                        <input
+                            type="text"
+                            id="cep"
+                            placeholder="00000-000"
+                            maxlength="9"
+                            inputmode="numeric"
+                            required
+                        >
 
-        <button type="submit">
-            Consultar CEP
-        </button>
+                        <button type="submit">
+                            Consultar CEP
+                        </button>
 
-    </form>
+                    </form>
 
-    <div id="resultadoCEP" class="hg-cep-resultado"></div>
+                    <div id="resultadoCEP" class="hg-cep-resultado"></div>
 
-    <p id="mensagemCEP" class="hg-cep-mensagem"></p>
+                    <p id="mensagemCEP" class="hg-cep-mensagem"></p>
 
-    </div>
+                </div>
 
                 <div class="hg-operations-card">
                     <h3>Cadastros</h3>
@@ -109,92 +106,80 @@ $nomeGerente = htmlspecialchars($_SESSION["gerente_nome"] ?? "Gerente");
                 <div class="hg-section-heading">
                     <div>
                     </div>
-
-        
                 </div>
 
-                    <div class="hg-map-container">
+                <div class="hg-map-container">
 
-                            <iframe
-                                id="mapaWindy"
-                                class="hg-map-iframe"
-                                src="https://embed.windy.com/embed2.html?lat=-26.30&lon=-48.85&detailLat=-26.30&detailLon=-48.85&zoom=8&level=surface&overlay=wind&product=ecmwf&menu=true&message=true&marker=true&calendar=now&type=map&location=coordinates&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1"
-                                title="Mapa de vento e chuva"
-                                loading="lazy">
-                            </iframe>
-
-                    </div>
+                    <iframe
+                        id="mapaWindy"
+                        class="hg-map-iframe"
+                        src="https://embed.windy.com/embed2.html?lat=-26.30&lon=-48.85&detailLat=-26.30&detailLon=-48.85&zoom=8&level=surface&overlay=wind&product=ecmwf&menu=true&message=true&marker=true&calendar=now&type=map&location=coordinates&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1"
+                        title="Mapa de vento e chuva"
+                        loading="lazy">
+                    </iframe>
 
                 </div>
-
-               
 
             </section>
 
 
+            <aside class="hg-alerts">
 
-           <aside class="hg-alerts">
+                <div class="hg-section-heading">
+                    <h2>Monitoramento Climático</h2>
+                </div>
 
-    <div class="hg-section-heading">
-        <h2>Monitoramento Climático</h2>
-    </div>
+                <div class="hg-weather">
 
-    <div class="hg-weather">
+                    <div class="hg-weather-location">
+                        <span class="hg-weather-pin">📍</span>
+                        <span class="hg-map-tag" id="localMapa">JOINVILLE - SC</span>
+                    </div>
 
-        <div class="hg-weather-location">
-            <span class="hg-weather-pin">📍</span>
-            <span class="hg-map-tag" id="localMapa">JOINVILLE - SC</span>
-        </div>
+                    <div class="hg-weather-temperature">
+                        <span>Temperatura atual</span>
+                        <strong id="temperatura">-- °C</strong>
+                    </div>
 
-        <div class="hg-weather-temperature">
-            <span>Temperatura atual</span>
-            <strong id="temperatura">-- °C</strong>
-        </div>
+                    <div class="hg-weather-condition">
+                        <span>Condição climática</span>
+                        <strong id="condicao">Carregando...</strong>
+                    </div>
 
-        <div class="hg-weather-condition">
-            <span>Condição climática</span>
-            <strong id="condicao">Carregando...</strong>
-        </div>
+                    <div class="hg-weather-update">
+                        <span id="atualizacao">Consultando clima...</span>
+                    </div>
 
-        <div class="hg-weather-update">
-            <span id="atualizacao">Consultando clima...</span>
-        </div>
+                </div>
 
-    </div>
+                <div class="hg-quick-access">
 
-    <div class="hg-quick-access">
+                    <h3>Acessos rápidos</h3>
 
-        <h3>Acessos rápidos</h3>
+                    <a href="visualizar_sensor.php">
+                        <span>Visualizar sensores</span>
+                        <span>→</span>
+                    </a>
 
-        <a href="visualizar_sensor.php">
-            <span>Visualizar sensores</span>
-            <span>→</span>
-        </a>
+                    <a href="visualizar_trem.php">
+                        <span>Visualizar trens</span>
+                        <span>→</span>
+                    </a>
 
-        <a href="visualizar_trem.php">
-            <span>Visualizar trens</span>
-            <span>→</span>
-        </a>
+                    <a href="visualizar_rota.php">
+                        <span>Visualizar rotas</span>
+                        <span>→</span>
+                    </a>
 
-        <a href="visualizar_rota.php">
-            <span>Visualizar rotas</span>
-            <span>→</span>
-        </a>
+                </div>
 
-        <a href="visualizar_usuario.php">
-            <span>Visualizar usuários</span>
-            <span>→</span>
-        </a>
+            </aside>
 
-        </div> 
+        </section>
 
-            </aside> 
+    </main>
 
-            </section> 
-
-            </main>
-
-  <footer class="hg-footer">
+    <footer class="hg-footer">
         <strong>Melhor ir DE-TRAIN!</strong>
         <span><a href="../public/landing_page.php" class="link-limpo">→ Conheça o projeto!</a></span>
     </footer>
