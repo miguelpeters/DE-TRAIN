@@ -91,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["atualizar"])) {
             die("Erro ao preparar atualização: " . $conexao->error);
         }
 
-        $stmt->bind_param("ssii", $nome, $tipo, $rota_id, $id);
+         $stmt->bind_param("ssii", $nome, $tipo, $rota_id, $id);
     }
 
     if (!$stmt->execute()) {
